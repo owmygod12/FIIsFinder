@@ -35,6 +35,8 @@ O DOM será dividido em três camadas semânticas básicas dentro de um `<main>`
 
 ## 4. Etapas de Desenvolvimento Modulares
 
+**Regra de Versionamento Contínuo:** O repositório já está inicializado. Para garantir os 20% da nota referentes ao uso do Git/GitHub, é obrigatório realizar commits atômicos. Ao final da execução de CADA FASE, devem ser executados os comandos `git add .`, `git commit -m 'mensagem descritiva'` e `git push origin main`. Commits massivos com todo o código de uma vez resultarão em perda de nota. O histórico final deve refletir a evolução com no mínimo 5 commits.
+
 ### Fase 1: Fundação HTML e CSS (Reset & Tokens)
 - Criar a estrutura base do `index.html` com marcações semânticas, incluindo obrigatoriamente a tag `<meta name="viewport" content="width=device-width, initial-scale=1.0">` no `<head>` para habilitar a escala responsiva nos navegadores móveis.
 - Configurar variáveis do `:root` no `style.css` refletindo a paleta aprovada.

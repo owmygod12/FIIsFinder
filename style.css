@@ -1,0 +1,69 @@
+/* ==========================================================================
+   CSS Reset & Base
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ==========================================================================
+   Design Tokens (CSS Variables)
+   ========================================================================== */
+:root {
+    /* Cores de Fundo e Superfícies */
+    --bg-geral: #0F1012;
+    --bg-superficie: #1A1B1E;
+    
+    /* Bordas */
+    --border-color: #2C2E33;
+    
+    /* Destaque / Accent */
+    --accent-color: #D4C5B9;
+    
+    /* Textos */
+    --text-principal: #F8F9FA;
+    --text-secundario: #909296;
+    
+    /* Cores Semânticas */
+    --color-sucesso: #4ADE80;
+    --color-erro: #F87171;
+    --bg-erro: rgba(239, 68, 68, 0.12);
+    
+    /* Tipografia */
+    --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* ==========================================================================
+   Typography & Global Styles
+   ========================================================================== */
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-geral);
+    color: var(--text-principal);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================================================
+   Layout Responsivo Principal
+   ========================================================================== */
+main {
+    width: 100%;
+    max-width: 580px;
+    margin: 0 auto;
+    padding: 2rem 1rem; /* Mínimo de 1rem lateral para evitar encostar nas bordas */
+}
+
+/* Header Base */
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+h1 {
+    color: var(--text-principal);
+    font-size: 2rem;
+    font-weight: 700;
+}
