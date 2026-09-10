@@ -1,3 +1,7 @@
+// Configurações Globais da API
+const BRAPI_TOKEN = 'jAAAf7c6oULD1Ni3hHpFUD';
+let currentAbortController = null;
+
 // Captura de referências do DOM
 const elements = {
     tickerInput: document.getElementById('ticker-input'),
@@ -31,8 +35,8 @@ function setUIState(state, errorMessage = "Mínimo de 6 Caracteres.") {
     }
 }
 
-// Lógica principal de busca (interatividade básica)
-function handleSearch() {
+// Lógica principal de busca assíncrona com API Brapi
+async function handleSearch() {
     const rawValue = elements.tickerInput.value;
     const sanitizedValue = rawValue.trim().toUpperCase();
 
@@ -42,13 +46,31 @@ function handleSearch() {
         return;
     }
 
+    // Tratamento de Concorrência (Race Conditions)
+    if (currentAbortController) {
+        currentAbortController.abort();
+    }
+    currentAbortController = new AbortController();
+
     // Transição para estado de carregamento
     setUIState('loading');
     
-    // Console log de apoio para confirmar a ação na Sprint 3
-    console.log(`Iniciando busca simulada para o ticker: ${sanitizedValue}`);
-    
-    // TODO: Integração com API (Sprint 4)
+    try {
+        const response = await fetch(`https://brapi.dev/api/quote/${sanitizedValue}?token=${BRAPI_TOKEN}`, {
+            signal: currentAbortController.signal
+        });
+        
+        // TODO: Parsing e Tratamento de Exceções (Sprint 5)
+        console.log(`Dados brutos recebidos da API para: ${sanitizedValue}`);
+        
+    } catch (error) {
+        // Ignora erros de cancelamento de requisição (AbortError) silenciosamente
+        if (error.name === 'AbortError') return;
+        
+        // Em caso de falha de rede geral, atualiza o estado para erro
+        console.error(error);
+        setUIState('error', 'Falha de conexão. Tente mais tarde.');
+    }
 }
 
 // Event Listeners
