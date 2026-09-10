@@ -67,3 +67,216 @@ h1 {
     font-size: 2rem;
     font-weight: 700;
 }
+
+/* ==========================================================================
+   Utility Classes
+   ========================================================================== */
+.hidden {
+    display: none !important;
+}
+
+.text-positive {
+    color: var(--color-sucesso) !important;
+}
+
+.text-negative {
+    color: var(--color-erro) !important;
+}
+
+/* ==========================================================================
+   Search Section
+   ========================================================================== */
+#search-section {
+    background-color: var(--bg-superficie);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 2rem;
+}
+
+.search-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-secundario);
+    font-size: 0.875rem;
+}
+
+.input-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+#ticker-input {
+    flex: 1;
+    min-width: 0;
+    background-color: var(--bg-geral);
+    border: 1px solid var(--border-color);
+    color: var(--text-principal);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    text-transform: uppercase;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+#ticker-input:focus {
+    border-color: var(--accent-color);
+}
+
+#search-btn {
+    background-color: var(--accent-color);
+    color: var(--bg-geral);
+    border: none;
+    padding: 0 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    min-height: 48px; /* Área de toque mínima para mobile */
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+#search-btn:hover {
+    background-color: #e5d8cd;
+}
+
+#search-btn:active {
+    transform: scale(0.97);
+}
+
+@media (max-width: 400px) {
+    .input-group {
+        flex-direction: column;
+    }
+    #search-btn {
+        width: 100%;
+    }
+}
+
+/* Error State */
+#error-state {
+    background-color: var(--bg-erro);
+    color: var(--color-erro);
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    text-align: center;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* ==========================================================================
+   Loading State
+   ========================================================================== */
+#loading-state {
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border-color);
+    border-top-color: var(--accent-color);
+    border-radius: 50%;
+    margin: 0 auto 1rem auto;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+#loading-state p {
+    color: var(--text-secundario);
+}
+
+/* ==========================================================================
+   Result Card
+   ========================================================================== */
+#result-card {
+    background-color: var(--bg-superficie);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+#fii-logo {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    object-fit: contain;
+    background-color: var(--bg-geral);
+}
+
+.fii-title h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+}
+
+#fii-ticker {
+    color: var(--text-secundario);
+    font-size: 0.875rem;
+    background-color: var(--bg-geral);
+    padding: 0.125rem 0.375rem;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+}
+
+.hero-block {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.current-price {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.variation {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    background-color: var(--bg-geral);
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.metric {
+    background-color: var(--bg-geral);
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.metric-label {
+    color: var(--text-secundario);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.metric-value {
+    font-size: 1.125rem;
+    font-weight: 600;
+}

@@ -12,7 +12,55 @@
             <h1>FIIsFinder</h1>
         </header>
         
-        <!-- Sprint 2: UI elements will be inserted here -->
+        <section id="search-section">
+            <label for="ticker-input" class="search-label">Digite o nome do Fundo Imobiliário</label>
+            <div class="input-group">
+                <input type="text" id="ticker-input" maxlength="6" autocomplete="off" spellcheck="false" placeholder="Ex: MXRF11">
+                <button id="search-btn">Buscar</button>
+            </div>
+            <div id="error-state" class="hidden">Mínimo de 6 Caracteres.</div>
+        </section>
+
+        <section id="states-container">
+            <div id="loading-state" class="hidden">
+                <div class="spinner"></div>
+                <p>Consultando B3...</p>
+            </div>
+
+            <article id="result-card" class="hidden">
+                <header class="card-header">
+                    <img id="fii-logo" src="" alt="Logo do FII">
+                    <div class="fii-title">
+                        <h2 id="fii-name">Nome do Fundo</h2>
+                        <span id="fii-ticker">TICKER</span>
+                    </div>
+                </header>
+
+                <div class="hero-block">
+                    <div class="current-price" id="fii-price">R$ 0,00</div>
+                    <div class="variation" id="fii-variation">+0,00%</div>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric">
+                        <span class="metric-label">Mínima (52s)</span>
+                        <span class="metric-value" id="fii-min">R$ 0,00</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Máxima (52s)</span>
+                        <span class="metric-value" id="fii-max">R$ 0,00</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Volume (Mês)</span>
+                        <span class="metric-value" id="fii-volume">R$ 0,0 M</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Valor de Mercado</span>
+                        <span class="metric-value" id="fii-market-cap">R$ 0,0 B</span>
+                    </div>
+                </div>
+            </article>
+        </section>
 
     </main>
 </body>
