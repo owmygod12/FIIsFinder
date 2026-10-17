@@ -1,8 +1,27 @@
+# Controle de versão e git
 .git
 .gitignore
+
+# Documentações e relatórios
 README.md
 plan.md
 sprints.md
+docker-ps.png
+
+# Arquivos de instrução de build do Docker
+Dockerfile
+.dockerignore
+
+# Diretórios e configurações de IDE / Editores
+.vscode/
+.idea/
+.gemini/
+.agents/
+*.swp
+*.swo
+
+# Diretórios de rascunho e arquivos temporários
+scratch/
 *.tmp
 *.log
 .DS_Store
