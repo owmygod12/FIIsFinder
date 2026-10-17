@@ -59,10 +59,47 @@
                         <span class="metric-value" id="fii-market-cap">R$ 0,0 B</span>
                     </div>
                 </div>
+
+                <div class="card-actions">
+                    <button id="save-favorite-btn" class="btn-favorite" type="button" aria-label="Salvar FII nos favoritos">
+                        <span class="btn-icon">⭐</span>
+                        <span class="btn-text">Salvar nos favoritos</span>
+                    </button>
+                    <div id="favorite-feedback" class="favorite-feedback hidden" role="status" aria-live="polite"></div>
+                </div>
             </article>
         </section>
 
+        <section id="favoritos" class="favorites-section" aria-labelledby="favorites-title">
+            <header class="favorites-header">
+                <div class="favorites-title-group">
+                    <h2 id="favorites-title">Meus FIIs Favoritos</h2>
+                    <span id="favorites-count" class="favorites-badge">0</span>
+                </div>
+            </header>
+
+            <div id="favorites-loading" class="favorites-state-container hidden">
+                <div class="spinner-small"></div>
+                <p>Carregando carteira de favoritos...</p>
+            </div>
+
+            <div id="favorites-empty" class="favorites-state-container hidden">
+                <p class="empty-title">Nenhum FII favoritado ainda.</p>
+                <p class="empty-subtitle">Consulte um ativo acima e clique em "Salvar nos favoritos" para acompanhá-lo aqui.</p>
+            </div>
+
+            <ul id="favorites-list" class="favorites-grid" role="list">
+                <!-- Itens inseridos dinamicamente pelo script.js -->
+            </ul>
+        </section>
+
     </main>
+
+    <!-- 1. SDK oficial do Supabase via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- 2. Credenciais públicas do projeto -->
+    <script src="config.js"></script>
+    <!-- 3. Lógica principal da aplicação -->
     <script src="script.js"></script>
 </body>
 </html>

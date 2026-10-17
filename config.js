@@ -9,5 +9,5 @@
 // políticas de RLS autorizam. O que NUNCA entra no código é a
 // chave service_role / secret e a senha do banco.
 // ============================================================
-const SUPABASE_URL = "https://ccmpfiumnohranmhhhnp.supabase.com";
+const SUPABASE_URL = "https://ccmpfiumnohranmhhhnp.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_v-BxEZJ5Yo0xqERmE-xeAQ_revbIKiy";

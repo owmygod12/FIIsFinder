@@ -280,3 +280,264 @@ h1 {
     font-size: 1.125rem;
     font-weight: 600;
 }
+
+/* ==========================================================================
+   Card Actions & Favorite Button (Sprint 7)
+   ========================================================================== */
+.card-actions {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.btn-favorite {
+    width: 100%;
+    min-height: 48px;
+    background-color: var(--bg-geral);
+    color: var(--text-principal);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-favorite:hover:not(:disabled) {
+    border-color: var(--accent-color);
+    background-color: rgba(212, 197, 185, 0.08);
+}
+
+.btn-favorite:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.btn-favorite:disabled {
+    opacity: 0.9;
+    cursor: not-allowed;
+}
+
+.btn-favorite.is-saved {
+    background-color: rgba(74, 222, 128, 0.1);
+    border-color: var(--color-sucesso);
+    color: var(--color-sucesso);
+}
+
+.favorite-feedback {
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    width: 100%;
+    transition: all 0.2s ease;
+}
+
+.favorite-feedback.feedback-error {
+    background-color: var(--bg-erro);
+    color: var(--color-erro);
+    border: 1px solid rgba(248, 113, 113, 0.2);
+}
+
+.favorite-feedback.feedback-success {
+    background-color: rgba(74, 222, 128, 0.1);
+    color: var(--color-sucesso);
+    border: 1px solid rgba(74, 222, 128, 0.2);
+}
+
+/* ==========================================================================
+   Favorites Section (#favoritos) (Sprint 7)
+   ========================================================================== */
+.favorites-section {
+    margin-top: 2.5rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.favorites-header {
+    margin-bottom: 1.25rem;
+    text-align: left;
+}
+
+.favorites-title-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.favorites-title-group h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-principal);
+}
+
+.favorites-badge {
+    background-color: var(--bg-superficie);
+    border: 1px solid var(--border-color);
+    color: var(--accent-color);
+    padding: 0.2rem 0.65rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.favorites-state-container {
+    background-color: var(--bg-superficie);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 2rem 1.25rem;
+    text-align: center;
+}
+
+.spinner-small {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border-color);
+    border-top-color: var(--accent-color);
+    border-radius: 50%;
+    margin: 0 auto 0.75rem auto;
+    animation: spin 1s linear infinite;
+}
+
+.empty-title {
+    color: var(--text-principal);
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.empty-subtitle {
+    color: var(--text-secundario);
+    font-size: 0.85rem;
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+/* ==========================================================================
+   Favorites Grid & Card Items (Sprint 7)
+   ========================================================================== */
+.favorites-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+}
+
+.favorite-card {
+    background-color: var(--bg-superficie);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    transition: transform 0.2s ease, border-color 0.2s ease, opacity 0.25s ease;
+}
+
+.favorite-card:hover {
+    border-color: rgba(212, 197, 185, 0.4);
+}
+
+.favorite-card.fade-out {
+    opacity: 0;
+    transform: scale(0.92);
+    pointer-events: none;
+}
+
+.fav-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    min-width: 0;
+    flex: 1;
+}
+
+.fav-top {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+}
+
+.fav-ticker {
+    font-weight: 700;
+    color: var(--text-principal);
+    font-size: 0.95rem;
+    background-color: var(--bg-geral);
+    border: 1px solid var(--border-color);
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.fav-name {
+    color: var(--text-secundario);
+    font-size: 0.825rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.fav-metrics {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.fav-price {
+    font-weight: 600;
+    color: var(--text-principal);
+    font-size: 0.95rem;
+}
+
+.fav-dy {
+    font-size: 0.75rem;
+    color: var(--accent-color);
+    background-color: rgba(212, 197, 185, 0.1);
+    border: 1px solid rgba(212, 197, 185, 0.2);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+}
+
+.btn-delete-favorite {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-secundario);
+    border-radius: 8px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.15rem;
+    line-height: 1;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.btn-delete-favorite:hover {
+    color: var(--color-erro);
+    background-color: var(--bg-erro);
+    border-color: rgba(248, 113, 113, 0.25);
+}
+
+.btn-delete-favorite:active {
+    transform: scale(0.92);
+}
+
+.btn-delete-favorite:focus-visible {
+    outline: 2px solid var(--color-erro);
+    outline-offset: 2px;
+}
