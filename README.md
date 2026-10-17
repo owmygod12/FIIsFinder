@@ -1,52 +1,47 @@
 # FIIsFinder — Etapa 02 (Bootcamp II)
 
-Aplicação web moderna para consulta de cotações em tempo real de Fundos de Investimento Imobiliário (FIIs) listados na B3, expandida na **Etapa 02** com persistência relacional em nuvem via **Supabase (BaaS)**, operações completas de **CRUD para carteira de favoritos**, arquitetura conteinerizada com **Docker e Nginx**, e cumprimento integral das **Sidequests Oficiais (SQ1 a SQ4)**.
+Aplicação web moderna para consulta, monitoramento e análise de cotações em tempo real de Fundos de Investimento Imobiliário (FIIs) listados na B3. O projeto evoluiu de uma Single Page Application (SPA) puramente estática da Etapa 01 para uma arquitetura robusta de microsserviço web com persistência em nuvem via **Supabase (BaaS)**, operações completas de **CRUD para carteira de favoritos**, conteinerização otimizada com **Docker e Nginx sobre Alpine Linux**, e cumprimento integral de todos os requisitos do edital e das quatro **Sidequests Oficiais (SQ1 a SQ4)**.
 
 ---
 
-## Autor
-**Henrique Lopes Borges de Souza** — Matrícula: `22612443`
+## Metadados e Autor
+
+- **Projeto:** FIIsFinder (Evolução 2)
+- **Autor:** Henrique Lopes Borges de Souza
+- **Matrícula:** 22612443
+- **Disciplina / Contexto:** Bootcamp II — Desenvolvimento Web, Persistência e Infraestrutura Conteinerizada
+
+### Evolução Arquitetural: Da SPA Estática à Nuvem Conteinerizada
+Na Etapa 01, o FIIsFinder operava como uma SPA front-end sem estado (*stateless*), consumindo dados dinâmicos da API externa da Brapi e sem qualquer mecanismo de retenção de dados entre sessões.
+
+Na **Etapa 02**, a arquitetura foi substancialmente reestruturada:
+1. **Camada de Persistência Relacional:** Integração direta com banco de dados PostgreSQL hospedado no **Supabase**, permitindo que o investidor salve, consulte, edite notas e remova ativos favoritos de forma persistente, com segurança garantida por **Row Level Security (RLS)**.
+2. **Infraestrutura Conteinerizada:** Empacotamento completo da aplicação estática em uma imagem de contêiner leve e de alto desempenho utilizando **Nginx sobre Alpine Linux**, abstraindo o ambiente operacional e garantindo total reprodutibilidade tanto em desenvolvimento quanto em produção.
 
 ---
 
-## Descrição do Projeto
+## Identidade e Links de Infraestrutura
 
-O **FIIsFinder** evoluiu de uma Single Page Application estática simples para uma aplicação com persistência de dados e infraestrutura conteinerizada. A plataforma consome a API da [Brapi](https://brapi.dev/) para obter cotações e dividend yield dos FIIs em tempo real, integrando-se nativamente ao [Supabase](https://supabase.com/) (PostgreSQL gerenciado) para salvar, listar, atualizar e excluir os fundos favoritos do usuário com políticas de segurança de dados (RLS). A aplicação é encapsulada e servida por um contêiner Docker com servidor web Nginx otimizado.
-
----
-
-## Tecnologias Utilizadas
-
-- **Frontend:** HTML5 Semântico, Vanilla CSS (Dark Theme FinTech com CSS Custom Properties) e Vanilla JavaScript (ES6+ modular, sem frameworks pesados).
-- **Persistência de Dados (BaaS):** [Supabase](https://supabase.com/) (PostgreSQL em nuvem, `@supabase/supabase-js` e Row Level Security - RLS).
-- **Conteinerização & Servidor Web:** Docker e Nginx (`nginx:alpine`).
-- **API Externa de Cotações:** [Brapi API](https://brapi.dev/) (`https://brapi.dev/api/quote/{ticker}`).
+- **Repositório do Projeto (GitHub):** [https://github.com/owmygod12/FIIsFinder](https://github.com/owmygod12/FIIsFinder)
+- **Aplicação no ar (GitHub Pages):** [https://owmygod12.github.io/FIIsFinder/](https://owmygod12.github.io/FIIsFinder/)
+- **Repositório no Docker Hub:** [https://hub.docker.com/r/henriquelopescaze/fiisfinder](https://hub.docker.com/r/henriquelopescaze/fiisfinder)
+- **Imagem e Namespace Docker:** `henriquelopescaze/fiisfinder`
+- **Tags Disponíveis no Registry:** `1.0`, `1.1` e `latest`
+- **Painel do Banco de Dados (Supabase):** [https://supabase.com/](https://supabase.com/)
+- **API Externa de Cotações (Brapi):** [https://brapi.dev/](https://brapi.dev/)
 
 ---
 
-## Funcionalidades Principais
+## Persistência de Dados (Supabase / PostgreSQL)
 
-- **Consulta de FIIs em Tempo Real:** Busca por ticker com sanitização de caracteres e validação mínima de 6 caracteres.
-- **Máquina de Estados Visual:** Estados bem definidos de `idle`, `loading`, `success` e `error`.
-- **Prevenção de Race Conditions:** Controle de concorrência com `AbortController` para cancelar requisições anteriores em caso de nova digitação rápida.
-- **CRUD Completo de Favoritos com Supabase:**
-  - **Create:** Favoritar FII diretamente pelo card de resultado.
-  - **Read:** Listagem de favoritos recuperada da tabela `favoritos_fiis` no Supabase.
-  - **Update:** Atualização de cotação e métricas do fundo salvo.
-  - **Delete:** Remoção de ativo dos favoritos com exclusão persistida no banco.
-- **Formatação Monetária Dinâmica:** Padrão BRL via `Intl.NumberFormat` e destaque visual para variações positivas e negativas.
+A persistência da carteira de favoritos utiliza um banco de dados relacional PostgreSQL gerenciado no Supabase. As interações ocorrem por meio do client oficial `@supabase/supabase-js`, garantindo tipagem consistente, integridade de dados e proteção em nível de linha.
 
----
+### DDL de Criação da Tabela `favoritos_fiis`
 
-## Tabela do Banco de Dados (`favoritos_fiis`)
-
-A persistência dos ativos é gerenciada na tabela `favoritos_fiis` no Supabase PostgreSQL, seguindo rigorosamente o esquema estrito da disciplina.
-
-### DDL de Criação da Tabela
 ```sql
 CREATE TABLE public.favoritos_fiis (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    criado_em TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
+    criado_em TIMESTAMPTZ DEFAULT NOW() NOT NULL,
     ticker TEXT NOT NULL UNIQUE,
     nome TEXT NOT NULL,
     preco NUMERIC(10, 2) NOT NULL,
@@ -54,75 +49,87 @@ CREATE TABLE public.favoritos_fiis (
 );
 ```
 
-### Configuração de Row Level Security (RLS)
+### Políticas de Segurança (Row Level Security - RLS)
+
+Para garantir acesso controlado às operações de CRUD mantendo a simplicidade de consumo da chave pública anônima (`anon key`), o RLS foi habilitado na tabela com quatro políticas explícitas:
+
 ```sql
--- Habilita Row Level Security na tabela
+-- 1. Habilitação do Row Level Security
 ALTER TABLE public.favoritos_fiis ENABLE ROW LEVEL SECURITY;
 
--- Políticas de acesso público para a chave anônima (anon key)
+-- 2. Política de Leitura (SELECT)
 CREATE POLICY "Permitir leitura publica" 
 ON public.favoritos_fiis FOR SELECT 
 USING (true);
 
+-- 3. Política de Inserção (INSERT)
 CREATE POLICY "Permitir insercao publica" 
 ON public.favoritos_fiis FOR INSERT 
 WITH CHECK (true);
 
+-- 4. Política de Atualização (UPDATE)
 CREATE POLICY "Permitir atualizacao publica" 
 ON public.favoritos_fiis FOR UPDATE 
 USING (true);
 
+-- 5. Política de Exclusão (DELETE)
 CREATE POLICY "Permitir exclusao publica" 
 ON public.favoritos_fiis FOR DELETE 
 USING (true);
 ```
 
 ### Dicionário de Dados
-| Coluna | Tipo | Restrições | Descrição |
+
+| Coluna | Tipo de Dado | Restrições | Descrição |
 | :--- | :--- | :--- | :--- |
-| `id` | `BIGINT` | `PRIMARY KEY`, `IDENTITY` | Identificador único numérico gerado automaticamente pelo banco. |
-| `criado_em` | `TIMESTAMPTZ` | `NOT NULL`, `DEFAULT NOW()` | Data e hora exata da inclusão do FII nos favoritos. |
-| `ticker` | `TEXT` | `NOT NULL`, `UNIQUE` | Código do ativo na B3 (ex: `MXRF11`, `HGLG11`). Impede duplicidades. |
-| `nome` | `TEXT` | `NOT NULL` | Razão social ou nome de divulgação do fundo imobiliário. |
-| `preco` | `NUMERIC(10, 2)` | `NOT NULL` | Valor da cota em reais (BRL). |
-| `dividend_yield` | `NUMERIC(5, 2)` | `NULLABLE` | Indicador de Dividend Yield anualizado (%) do ativo. |
+| `id` | `BIGINT` | `PRIMARY KEY`, `GENERATED ALWAYS AS IDENTITY` | Chave primária sequencial de 64 bits gerada automaticamente pelo PostgreSQL. |
+| `criado_em` | `TIMESTAMPTZ` | `NOT NULL`, `DEFAULT NOW()` | Carimbo de data e hora UTC com fuso horário da inserção do registro. |
+| `ticker` | `TEXT` | `NOT NULL`, `UNIQUE` | Código de negociação do ativo na B3 (ex: `MXRF11`, `HGLG11`). Restrição `UNIQUE` impede duplicidade na carteira. |
+| `nome` | `TEXT` | `NOT NULL` | Razão social ou denominação oficial do FII reportada pela administradora. |
+| `preco` | `NUMERIC(10, 2)` | `NOT NULL` | Cotação mais recente em reais (BRL), suportando até 8 dígitos inteiros e 2 casas decimais. |
+| `dividend_yield` | `NUMERIC(5, 2)` | `NULLABLE` | Indicador percentual anualizado de rendimentos (DY %). Permite valor nulo caso indisponível na API. |
 
 ---
 
-## Sidequests Oficiais da Etapa 02
-
-Abaixo estão detalhadas as quatro Sidequests obrigatórias previstas no edital oficial da disciplina:
+## Sidequests Oficiais (SQ1 a SQ4)
 
 ### SQ1 — Otimização do Contexto de Build (`.dockerignore`)
 
-Foi criado o arquivo `.dockerignore` na raiz do projeto com o objetivo de excluir do empacotamento:
-- Diretório de versionamento: `.git`
-- Arquivos de documentação: `README.md`, `plan.md`
-- Arquivos temporários, de sistema operacional e de logs.
+Para otimizar o processo de compilação da imagem Docker, foi configurado o arquivo `.dockerignore` na raiz do repositório, filtrando arquivos de desenvolvimento, logs e histórico:
+
+```text
+.git
+.gitignore
+README.md
+plan.md
+docker-ps.png
+*.log
+.DS_Store
+Thumbs.db
+```
 
 #### Justificativa Técnica:
-1. **Redução do Build Context:** Ao executar `docker build`, o cliente Docker compacta recursivamente todos os arquivos do diretório atual e os envia via socket para o Docker Daemon (*build context*). Ignorar a pasta `.git` (que contém todo o histórico de commits e blobs binários) e arquivos de documentação reduz drasticamente a quantidade de bytes trafegados, acelerando sensivelmente o tempo de início do build.
-2. **Diminuição do Tamanho Final da Imagem:** Garante que comandos genéricos como `COPY . /usr/share/nginx/html` não incluam artefatos que não façam parte do runtime web, mantendo a imagem final baseada em `nginx:alpine` extremamente compacta (tipicamente inferior a 25 MB).
-3. **Segurança e Higiene:** Evita que metadados internos do Git, chaves temporárias ou anotações internas fiquem expostos publicamente dentro do contêiner em produção.
+1. **Redução Drástica do Build Context:** Quando o comando `docker build` é disparado, o Docker CLI envia recursivamente o diretório atual via socket para o Docker Daemon. O diretório `.git` armazena histórico de commits, objetos binários e referências que não têm utilidade em tempo de execução web. A exclusão reduz expressivamente os megabytes trafegados, acelerando a fase inicial do build.
+2. **Minimização do Tamanho Final da Imagem (~28.8 MB):** A imagem final baseada em `nginx:alpine` atinge apenas **~28.8 MB**. O uso do `.dockerignore` impede que o comando `COPY . /usr/share/nginx/html/` injete documentações pesadas, prints (`docker-ps.png`) ou artefatos transitórios na camada de arquivos da imagem servida pelo Nginx.
+3. **Segurança e Higiene Operacional:** Previne o vazamento acidental de metadados de branches, credenciais temporárias ou informações estruturais do repositório dentro do contêiner publicado publicamente.
 
 ---
 
-### SQ2 — Versionamento de Imagens no Docker Hub
+### SQ2 — Versionamento e Publicação de Imagens no Docker Hub
 
-A imagem oficial do **FIIsFinder** foi compilada, tagueada e publicada no repositório público do Docker Hub (`henriquelopescaze/fiisfinder`) com as três tags requeridas:
+A imagem oficial do FIIsFinder foi tagueada e publicada no repositório oficial do Docker Hub (`henriquelopescaze/fiisfinder`), contemplando as três tags requeridas:
 
-- **`1.0`**: Versão inicial estável da aplicação conteinerizada servida via Nginx.
-- **`1.1`**: Versão incremental com refinamentos de layout, headers de cache e integração Supabase.
-- **`latest`**: Apontador para a versão de produção mais atual e recomendada.
+- **`1.0`**: Versão inicial estável da aplicação conteinerizada servida via Nginx Alpine.
+- **`1.1`**: Versão incremental com refinamentos de layout, cabeçalhos de cache e integração Supabase.
+- **`latest`**: Ponteiro padrão para a versão de produção mais atualizada.
 
-#### Comandos de Publicação:
+#### Comandos de Tagging e Push Executados:
 ```bash
-# Tagging das versões
-docker tag fiisfinder:latest henriquelopescaze/fiisfinder:1.0
-docker tag fiisfinder:latest henriquelopescaze/fiisfinder:1.1
-docker tag fiisfinder:latest henriquelopescaze/fiisfinder:latest
+# Tagging a partir da imagem base estável (1.0) para 1.1 e latest
+docker tag henriquelopescaze/fiisfinder:1.0 henriquelopescaze/fiisfinder:1.1
+docker tag henriquelopescaze/fiisfinder:1.0 henriquelopescaze/fiisfinder:latest
 
-# Envio para o Docker Hub
+# Publicação (Push) de todas as tags no repositório público
 docker push henriquelopescaze/fiisfinder:1.0
 docker push henriquelopescaze/fiisfinder:1.1
 docker push henriquelopescaze/fiisfinder:latest
@@ -132,111 +139,135 @@ docker push henriquelopescaze/fiisfinder:latest
 
 ### SQ3 — Documentação e Overview no Docker Hub
 
-A página oficial do repositório no Docker Hub foi configurada com o Overview técnico contendo:
-1. **Descrição da Aplicação:** Apresentação clara do FIIsFinder como ferramenta de monitoramento de Fundos Imobiliários da B3 com persistência no Supabase.
-2. **Comando de Execução Rápida:** Instrução pronta para cópia e execução em qualquer ambiente com Docker:
+A página oficial do repositório no Docker Hub foi estruturada com documentação técnica completa contendo:
+1. **Descrição da Aplicação:** Apresentação clara do FIIsFinder como ferramenta web para monitoramento de Fundos Imobiliários da B3 com persistência no Supabase.
+2. **Comando de Execução Rápida:** Instrução pronta para consumo imediato:
    ```bash
    docker run -d -p 8080:80 --name fiisfinder henriquelopescaze/fiisfinder:latest
    ```
-3. **Link do Repositório GitHub:** [https://github.com/owmygod12/FIIsFinder](https://github.com/owmygod12/FIIsFinder)
+3. **Link do Repositório GitHub:** Link direto para o código-fonte auditável: [https://github.com/owmygod12/FIIsFinder](https://github.com/owmygod12/FIIsFinder).
 
 ---
 
 ### SQ4 — Orquestração Local e Gestão de Escala com Kubernetes
 
 #### 1. Execução Prática de Contêineres Simultâneos
-Foram instanciados dois contêineres idênticos em paralelo, mapeados em portas distintas no host:
+Foram instanciados dois contêineres a partir das imagens publicadas, mapeados em portas distintas no host local:
 
 ```bash
-# Inicialização do Contêiner 1 na porta 8080
-docker run -d -p 8080:80 --name fiisfinder-app-1 henriquelopescaze/fiisfinder:latest
+# Inicialização do Contêiner 1 na porta 8080 (tag 1.0)
+docker run -d -p 8080:80 --name fiisfinder-app henriquelopescaze/fiisfinder:1.0
 
-# Inicialização do Contêiner 2 na porta 8081
-docker run -d -p 8081:80 --name fiisfinder-app-2 henriquelopescaze/fiisfinder:latest
+# Inicialização do Contêiner 2 na porta 8081 (tag latest)
+docker run -d -p 8081:80 --name fiisfinder-replica henriquelopescaze/fiisfinder:latest
 ```
 
-Ambos os contêineres executam de forma isolada e simultânea, acessíveis em `http://localhost:8080` e `http://localhost:8081`. 
+Ambos os contêineres executam de forma totalmente isolada e paralela, acessíveis respectivamente em `http://localhost:8080` e `http://localhost:8081`.
 
-> **Evidência do comando `docker ps`:** O print comprobatório demonstrando ambos os contêineres em status *Up* encontra-se registrado no repositório: [`docker-ps.png`](file:///c:/Users/USUARIO/Documents/Projetos_pessoais/BOOTCAMP2/FIIsFinder/docker-ps.png).
+#### Evidência de Execução (`docker ps`):
+Abaixo encontra-se o registro visual comprovando ambos os contêineres em execução ativa (*Up*):
+
+![Execução simultânea de contêineres](./docker-ps.png)
+
+---
 
 #### 2. Análise Teórica: Gestão e Escala de 100 Contêineres via Kubernetes
 
-Operar 2 contêineres manualmente via CLI do Docker é viável, porém administrar **100 contêineres** em escala de produção torna a abordagem manual insustentável devido a:
-- Falta de balanceamento de carga automático entre múltiplos servidores físicos.
-- Impossibilidade de auto-recuperação imediata (*self-healing*) caso uma máquina falhe.
-- Dificuldade no gerenciamento de portas e concorrência de recursos de CPU/Memória.
+Operar 2 contêineres manualmente via CLI do Docker é trivial, contudo a administração manual de **100 contêineres** em ambiente de alta disponibilidade é operacionalmente inviável pelos seguintes desafios:
+- Inexistência de balanceamento de carga nativo entre múltiplos servidores físicos.
+- Impossibilidade de auto-recuperação (*self-healing*) em caso de falha de hardware ou processo.
+- Conflitos de portas e complexidade no roteamento de rede.
+- Dificuldade em aplicar atualizações sem interrupção de serviço (*rolling updates*).
 
-Nesse cenário, adota-se o **Kubernetes (K8s)** como orquestrador, estruturado nos três conceitos fundamentais:
+Para sanar essas limitações, utiliza-se o **Kubernetes (K8s)** como orquestrador, alicerçado em três conceitos fundamentais:
 
-1. **Cluster:**
-   - O Cluster é o conjunto unificado de máquinas (físicas ou instâncias de nuvem) agregadas sob uma mesma camada de controle.
-   - É dividido entre o **Control Plane** (responsável pelo agendamento, estado do sistema, API server e etcd) e os **Worker Nodes** (máquinas que efetivamente executam as cargas de trabalho).
-   - Para gerenciar 100 contêineres, o scheduler do cluster analisa a demanda de CPU e memória e distribui a execução dos contêineres de forma balanceada entre os múltiplos nós de trabalho, abstraindo totalmente a infraestrutura subjacente.
+```
++-----------------------------------------------------------------------------------+
+|                                  KUBERNETES CLUSTER                               |
+|                                                                                   |
+|  +-----------------------------------------------------------------------------+  |
+|  |                         CONTROL PLANE (MASTER)                              |  |
+|  |   [API Server] <---> [etcd] <---> [Controller Manager] <---> [Scheduler]   |  |
+|  +-----------------------------------------------------------------------------+  |
+|                                         |                                         |
+|                 +-----------------------+-----------------------+                 |
+|                 |                                               |                 |
+|  +-----------------------------+                 +-----------------------------+  |
+|  |     WORKER NODE 01          |                 |     WORKER NODE 02          |  |
+|  |  [Kubelet]   [Kube-Proxy]   |                 |  [Kubelet]   [Kube-Proxy]   |  |
+|  |                             |                 |                             |  |
+|  |  +-----------------------+  |                 |  +-----------------------+  |  |
+|  |  |      POD (Replica)    |  |                 |  |      POD (Replica)    |  |  |
+|  |  |  +-----------------+  |  |                 |  |  +-----------------+  |  |  |
+|  |  |  | FIIsFinder App  |  |  |                 |  |  | FIIsFinder App  |  |  |  |
+|  |  |  | (Nginx Alpine)  |  |  |                 |  |  | (Nginx Alpine)  |  |  |  |
+|  |  |  +-----------------+  |  |                 |  |  +-----------------+  |  |  |
+|  |  +-----------------------+  |                 |  +-----------------------+  |  |
+|  |  ... até N pods             |                 |  ... até N pods             |  |
+|  +-----------------------------+                 +-----------------------------+  |
++-----------------------------------------------------------------------------------+
+```
 
-2. **Pod:**
-   - O Pod é a **menor unidade atômica e executável** no Kubernetes. Diferente do Docker standalone onde interagimos diretamente com o contêiner, no Kubernetes nunca executamos contêineres soltos; eles são sempre encapsulados dentro de um Pod.
-   - Um Pod compartilha o mesmo namespace de rede (possuindo um IP único no cluster), o mesmo loopback e volumes de armazenamento com os contêineres que o compõem.
-   - Na aplicação FIIsFinder, cada Pod contém uma instância do Nginx servindo os arquivos estáticos, permitindo que o Kubernetes trate cada réplica como uma entidade autônoma e descartável.
+##### 1. Cluster:
+- O Cluster é a união lógica de servidores computacionais (físicos ou instâncias em nuvem) gerenciados de forma unificada.
+- Divide-se entre o **Control Plane** (composto por API Server, etcd, Scheduler e Controller Manager) e os **Worker Nodes** (máquinas que executam as aplicações, contendo Kubelet, Kube-Proxy e o Container Runtime).
+- Em uma escala de 100 contêineres, o **Scheduler** distribui automaticamente a carga computacional analisando limites de CPU e memória de cada nó, eliminando gargalos pontuais e garantindo alta disponibilidade física.
 
-3. **Réplicas (Deployments / ReplicaSets):**
-   - O conceito de réplicas é implementado através de recursos declarativos como o `Deployment` e o `ReplicaSet`. Em vez de executar 100 comandos `docker run`, o engenheiro define um arquivo de manifesto YAML especificando `spec.replicas: 100`.
-   - O Kubernetes opera em um ciclo contínuo de reconciliação (*reconciliation loop*), comparando o **estado atual** com o **estado desejado**:
-     - **Self-Healing (Auto-recuperação):** Se 5 pods quebrarem ou se um nó físico for desligado, o ReplicaSet detecta que há apenas 95 réplicas ativas e programa imediatamente 5 novos pods em nós saudáveis, restabelecendo as 100 réplicas sem qualquer intervenção humana.
-     - **Service & Load Balancing:** Um recurso `Service` (ex: `type: LoadBalancer`) expõe um IP/DNS único para os usuários finais e distribui o tráfego de rede uniformemente entre as 100 réplicas em execução via round-robin ou algoritmos avançados.
-     - **Horizontal Pod Autoscaler (HPA):** Permite inclusive que a quantidade de réplicas escale dinamicamente (ex: de 20 para 100 réplicas) com base no consumo de CPU ou volume de requisições de cotações na B3.
+##### 2. Pod:
+- O Pod é a **menor unidade atômica executável** no ecossistema Kubernetes. O Kubernetes não gerencia contêineres Docker isolados; ele instancia contêineres encapsulados dentro de Pods.
+- Todos os contêineres de um Pod compartilham o mesmo endereço IP de rede, portas de escuta locais e volumes de armazenamento.
+- No caso do FIIsFinder, cada Pod encapsula uma instância idêntica do Nginx servindo a SPA estática, operando como uma unidade descartável e replicável.
+
+##### 3. Réplicas (Deployments, ReplicaSets, HPA e Self-Healing):
+- **Declaração de Estado Desejado:** Através de um manifesto declarativo (`Deployment`), define-se `spec.replicas: 100`. O Kubernetes assegura continuamente que exatamente 100 instâncias estejam em execução por meio do ciclo de reconciliação (*reconciliation loop*).
+- **Self-Healing (Auto-Recuperação):** Caso nós físicos falhem ou contêineres travem, o `ReplicaSet` detecta a divergência entre o estado real e o estado desejado, recriando novos Pods imediatamente em nós saudáveis, sem intervenção humana.
+- **Service & Load Balancing:** Um recurso `Service` (como `LoadBalancer` ou `Ingress`) disponibiliza um único ponto de entrada para os usuários e balanceia o tráfego HTTP entre os 100 Pods ativos via round-robin.
+- **Horizontal Pod Autoscaler (HPA):** Permite redimensionar dinamicamente o número de réplicas (por exemplo, reduzindo para 20 Pods na madrugada e escalando para 100 réplicas durante o horário de abertura do pregão da B3) com base na utilização de CPU, memória ou taxa de requisições.
 
 ---
 
 ## Como Executar Localmente
 
-### Opção 1: Execução com Docker
+### Opção 1: Execução com Docker (Recomendada)
 
-Certifique-se de ter o Docker instalado e execute:
+Com o Docker instalado em sua máquina, execute:
 
 ```bash
-# 1. Clonar o repositório
-git clone https://github.com/owmygod12/FIIsFinder.git
-cd FIIsFinder
-
-# 2. Construir a imagem Docker local
-docker build -t henriquelopescaze/fiisfinder:latest .
-
-# 3. Executar o contêiner mapeando a porta 8080
+# 1. Baixar a imagem oficial diretamente do Docker Hub e iniciar o contêiner
 docker run -d -p 8080:80 --name fiisfinder-app henriquelopescaze/fiisfinder:latest
-
-# Dica: Você também pode executar diretamente a imagem publicada no Docker Hub:
-# docker run -d -p 8080:80 --name fiisfinder-app henriquelopescaze/fiisfinder:latest
 ```
 
-Acesse no navegador: `http://localhost:8080`
+Após a inicialização, acesse em seu navegador:
+```text
+http://localhost:8080
+```
 
-Para parar e remover o contêiner:
+Para inspecionar os logs do servidor Nginx:
+```bash
+docker logs -f fiisfinder-app
+```
+
+Para pausar e remover o contêiner:
 ```bash
 docker stop fiisfinder-app && docker rm fiisfinder-app
 ```
 
 ---
 
-### Opção 2: Execução Direta no Navegador
+### Opção 2: Execução Estática Alternativa (Live Server)
 
-1. Clone o repositório:
+Caso prefira executar sem o Docker, é possível servir os arquivos estáticos diretamente no navegador:
+
+1. Clone o repositório do projeto:
    ```bash
    git clone https://github.com/owmygod12/FIIsFinder.git
    cd FIIsFinder
    ```
-2. Configure as credenciais do seu projeto Supabase no arquivo `config.js`:
+
+2. Certifique-se de que o arquivo `config.js` contenha as credenciais válidas do Supabase:
    ```javascript
    const SUPABASE_URL = "https://SEU-PROJETO.supabase.co";
    const SUPABASE_ANON_KEY = "SUA_CHAVE_ANONIMA_AQUI";
    ```
-3. Abra o arquivo `index.html` em seu navegador ou utilize a extensão **Live Server** no VS Code.
 
----
-
-## Links de Infraestrutura
-
-- **Aplicação no ar (GitHub Pages):** [https://owmygod12.github.io/FIIsFinder/](https://owmygod12.github.io/FIIsFinder/)
-- **Repositório do Projeto (GitHub):** [https://github.com/owmygod12/FIIsFinder](https://github.com/owmygod12/FIIsFinder)
-- **Repositório no Docker Hub:** [https://hub.docker.com/r/henriquelopescaze/fiisfinder](https://hub.docker.com/r/henriquelopescaze/fiisfinder)
-- **Painel do Supabase:** [https://supabase.com/](https://supabase.com/)
-- **Documentação da Brapi API:** [https://brapi.dev/](https://brapi.dev/)
+3. Abra o diretório no **VS Code**, clique com o botão direito sobre o arquivo `index.html` e selecione **"Open with Live Server"** (ou utilize qualquer servidor estático HTTP local, como `python -m http.server 8080` ou `npx serve .`).
