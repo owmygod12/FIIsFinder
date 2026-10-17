@@ -4,6 +4,11 @@ FROM nginx:alpine
 # Metadados da imagem
 LABEL maintainer="Henrique Lopes Borges de Souza"
 LABEL description="FIIsFinder - Consulta e monitoramento de FIIs da B3 com persistencia no Supabase"
+LABEL repository="henriquelopescaze/fiisfinder"
+
+# Instruções de execução:
+# Build: docker build -t henriquelopescaze/fiisfinder:latest .
+# Run:   docker run -d -p 8080:80 --name fiisfinder henriquelopescaze/fiisfinder:latest
 
 # Remove os arquivos estáticos padrao de boas-vindas do Nginx
 RUN rm -rf /usr/share/nginx/html/*

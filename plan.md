@@ -130,21 +130,21 @@ flowchart TD
   - Criação do arquivo `.dockerignore` na raiz do projeto, excluindo estritamente: `.git`, `README.md`, `plan.md`, arquivos temporários e logs.
   - Documentação da justificativa técnica detalhando a redução do *build context* enviado ao Docker daemon, ganho de performance no build e redução do tamanho e vulnerabilidades da imagem final.
 - **SQ2 — Versionamento de Imagens no Docker Hub:**
-  - Criação de repositório público no Docker Hub: `owmygod12/fiisfinder`.
+  - Criação de repositório público no Docker Hub: `henriquelopescaze/fiisfinder`.
   - Geração e publicação das três tags obrigatórias:
     - `1.0`: Release inicial da imagem conteinerizada.
     - `1.1`: Versão incremental com refinamentos de layout e cache.
     - `latest`: Ponteiro para a versão de produção mais recente.
-  - Comandos executados: `docker tag fiisfinder:latest owmygod12/fiisfinder:1.0`, etc., e `docker push`.
+  - Comandos executados: `docker tag fiisfinder:latest henriquelopescaze/fiisfinder:1.0`, etc., e `docker push henriquelopescaze/fiisfinder:...`.
 - **SQ3 — Overview Técnico no Docker Hub:**
   - Elaboração da documentação da página oficial do repositório no Docker Hub com:
     1. Descrição clara e concisa da aplicação FIIsFinder.
-    2. Comando pronto para execução imediata (`docker run -d -p 8080:80 owmygod12/fiisfinder:latest`).
+    2. Comando pronto para execução imediata (`docker run -d -p 8080:80 henriquelopescaze/fiisfinder:latest`).
     3. Link direto para o repositório no GitHub.
 - **SQ4 — Orquestração Local e Gestão de Escala com Kubernetes:**
   - **Prática:** Execução simultânea de 2 contêineres a partir da mesma imagem em portas distintas (`8080` e `8081`):
-    - `docker run -d -p 8080:80 --name fiisfinder-app-1 owmygod12/fiisfinder:latest`
-    - `docker run -d -p 8081:80 --name fiisfinder-app-2 owmygod12/fiisfinder:latest`
+    - `docker run -d -p 8080:80 --name fiisfinder-app-1 henriquelopescaze/fiisfinder:latest`
+    - `docker run -d -p 8081:80 --name fiisfinder-app-2 henriquelopescaze/fiisfinder:latest`
   - **Evidência:** Execução do comando `docker ps`, captura de tela demonstrando ambos os contêineres em status *Up* e inclusão do arquivo de print no repositório (`docker-ps.png`).
   - **Seção Teórica no README:** Análise fundamentada da transição de escala de 2 para 100 contêineres utilizando Kubernetes (K8s), detalhando os pilares:
     - **Cluster:** Estrutura unificada de nós de controle (Control Plane) e nós de trabalho (Worker Nodes) para distribuição e gestão de recursos físicos/virtuais.

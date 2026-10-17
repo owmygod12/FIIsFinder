@@ -109,7 +109,7 @@ Foi criado o arquivo `.dockerignore` na raiz do projeto com o objetivo de exclui
 
 ### SQ2 — Versionamento de Imagens no Docker Hub
 
-A imagem oficial do **FIIsFinder** foi compilada, tagueada e publicada no repositório público do Docker Hub (`owmygod12/fiisfinder`) com as três tags requeridas:
+A imagem oficial do **FIIsFinder** foi compilada, tagueada e publicada no repositório público do Docker Hub (`henriquelopescaze/fiisfinder`) com as três tags requeridas:
 
 - **`1.0`**: Versão inicial estável da aplicação conteinerizada servida via Nginx.
 - **`1.1`**: Versão incremental com refinamentos de layout, headers de cache e integração Supabase.
@@ -118,14 +118,14 @@ A imagem oficial do **FIIsFinder** foi compilada, tagueada e publicada no reposi
 #### Comandos de Publicação:
 ```bash
 # Tagging das versões
-docker tag fiisfinder:latest owmygod12/fiisfinder:1.0
-docker tag fiisfinder:latest owmygod12/fiisfinder:1.1
-docker tag fiisfinder:latest owmygod12/fiisfinder:latest
+docker tag fiisfinder:latest henriquelopescaze/fiisfinder:1.0
+docker tag fiisfinder:latest henriquelopescaze/fiisfinder:1.1
+docker tag fiisfinder:latest henriquelopescaze/fiisfinder:latest
 
 # Envio para o Docker Hub
-docker push owmygod12/fiisfinder:1.0
-docker push owmygod12/fiisfinder:1.1
-docker push owmygod12/fiisfinder:latest
+docker push henriquelopescaze/fiisfinder:1.0
+docker push henriquelopescaze/fiisfinder:1.1
+docker push henriquelopescaze/fiisfinder:latest
 ```
 
 ---
@@ -136,7 +136,7 @@ A página oficial do repositório no Docker Hub foi configurada com o Overview t
 1. **Descrição da Aplicação:** Apresentação clara do FIIsFinder como ferramenta de monitoramento de Fundos Imobiliários da B3 com persistência no Supabase.
 2. **Comando de Execução Rápida:** Instrução pronta para cópia e execução em qualquer ambiente com Docker:
    ```bash
-   docker run -d -p 8080:80 --name fiisfinder owmygod12/fiisfinder:latest
+   docker run -d -p 8080:80 --name fiisfinder henriquelopescaze/fiisfinder:latest
    ```
 3. **Link do Repositório GitHub:** [https://github.com/owmygod12/FIIsFinder](https://github.com/owmygod12/FIIsFinder)
 
@@ -149,10 +149,10 @@ Foram instanciados dois contêineres idênticos em paralelo, mapeados em portas 
 
 ```bash
 # Inicialização do Contêiner 1 na porta 8080
-docker run -d -p 8080:80 --name fiisfinder-app-1 owmygod12/fiisfinder:latest
+docker run -d -p 8080:80 --name fiisfinder-app-1 henriquelopescaze/fiisfinder:latest
 
 # Inicialização do Contêiner 2 na porta 8081
-docker run -d -p 8081:80 --name fiisfinder-app-2 owmygod12/fiisfinder:latest
+docker run -d -p 8081:80 --name fiisfinder-app-2 henriquelopescaze/fiisfinder:latest
 ```
 
 Ambos os contêineres executam de forma isolada e simultânea, acessíveis em `http://localhost:8080` e `http://localhost:8081`. 
@@ -199,10 +199,13 @@ git clone https://github.com/owmygod12/FIIsFinder.git
 cd FIIsFinder
 
 # 2. Construir a imagem Docker local
-docker build -t fiisfinder .
+docker build -t henriquelopescaze/fiisfinder:latest .
 
 # 3. Executar o contêiner mapeando a porta 8080
-docker run -d -p 8080:80 --name fiisfinder-app fiisfinder
+docker run -d -p 8080:80 --name fiisfinder-app henriquelopescaze/fiisfinder:latest
+
+# Dica: Você também pode executar diretamente a imagem publicada no Docker Hub:
+# docker run -d -p 8080:80 --name fiisfinder-app henriquelopescaze/fiisfinder:latest
 ```
 
 Acesse no navegador: `http://localhost:8080`
@@ -234,6 +237,6 @@ docker stop fiisfinder-app && docker rm fiisfinder-app
 
 - **Aplicação no ar (GitHub Pages):** [https://owmygod12.github.io/FIIsFinder/](https://owmygod12.github.io/FIIsFinder/)
 - **Repositório do Projeto (GitHub):** [https://github.com/owmygod12/FIIsFinder](https://github.com/owmygod12/FIIsFinder)
-- **Repositório no Docker Hub:** [https://hub.docker.com/r/owmygod12/fiisfinder](https://hub.docker.com/r/owmygod12/fiisfinder)
+- **Repositório no Docker Hub:** [https://hub.docker.com/r/henriquelopescaze/fiisfinder](https://hub.docker.com/r/henriquelopescaze/fiisfinder)
 - **Painel do Supabase:** [https://supabase.com/](https://supabase.com/)
 - **Documentação da Brapi API:** [https://brapi.dev/](https://brapi.dev/)
