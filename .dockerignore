@@ -1,0 +1,9 @@
+.git
+.gitignore
+README.md
+plan.md
+sprints.md
+*.tmp
+*.log
+.DS_Store
+Thumbs.db
